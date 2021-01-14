@@ -19,7 +19,7 @@ class Application extends Nullstack {
     page.locale = 'pt-BR';
   }
 
-  addChamption() {
+  addChampion() {
     const previousList = this.items[this.role] || [];
     const sublist = [
       ...previousList,
@@ -30,7 +30,7 @@ class Application extends Nullstack {
 
   renderForm() {
     return ( 
-      <form onsubmit={this.addChamption}>
+      <form onsubmit={this.addChampion}>
         <label>
           Nome
           <input name="name" bind={this.name} />
