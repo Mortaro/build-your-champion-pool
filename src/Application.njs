@@ -5,8 +5,8 @@ import './Application.scss';
 class Application extends Nullstack {
 
   items = {}
-  name = ""
-  role = ""
+  name = '';
+  role = '';
 
   static async start({project}) {
     project.name = 'Faça sua champion pool';
@@ -15,58 +15,56 @@ class Application extends Nullstack {
   }
 
   prepare({project, page}) {
-    page.title = `${project.name}`;
+    page.title = project.name;
     page.locale = 'pt-BR';
+  }
+
+  addChamption() {
+    const previousList = this.items[this.role] || [];
+    const sublist = [
+      ...previousList,
+      {name: this.name}
+    ];
+    this.items = { ...this.items, [this.role]: sublist }
   }
 
   renderForm() {
     return ( 
-        <form onsubmit={() => {
-          const previousList = this.items[this.role] || [];
-          const sublist = [
-            ...previousList,
-            {
-              name: this.name
-            }
-          ]
-          this.items = { ...this.items, [this.role]: sublist }
-        }}>
-          <label>
-            Nome
-            <input name="name" bind={this.name} />
-          </label>
-          <label>
-            Rota
-            <input name="role" bind={this.role} />
-          </label>
-          <button type="submit">Cadastrar</button>
-        </form>
-      )
+      <form onsubmit={this.addChamption}>
+        <label>
+          Nome
+          <input name="name" bind={this.name} />
+        </label>
+        <label>
+          Rota
+          <input name="role" bind={this.role} />
+        </label>
+        <button type="submit">Cadastrar</button>
+      </form>
+    )
+  }
+
+  renderRole({role}) {
+    return (        
+      <li>
+        <h4>{role}</h4>
+        <ul>
+          {this.items[role].map(({name}) => <li>{name}</li>)}
+        </ul>
+      </li>
+    )
   }
 
   renderItems() {
-    const allItems = Object.keys(this.items);
-    if(allItems.length === 0) {
-      return false
-    }
+    const roles = Object.keys(this.items);
+    if(roles.length === 0) return false;
     return (
-      <ul>
+      <div>
         <h3>Campeões cadastrados</h3>
-        {allItems.map((role) => {
-          return (        
-            <li>
-              <ul>
-                <h4>{role}</h4>
-              {this.items[role].map(champion => (
-                <li>
-                  {champion.name}
-                </li>
-              ))}
-              </ul>
-            </li>
-          )
-        })}
-      </ul>
+        <ul>
+          {roles.map(role => <Role role={role} />)}
+        </ul>
+      </div>
     )
   }
 
